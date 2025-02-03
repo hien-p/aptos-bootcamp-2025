@@ -28,6 +28,7 @@ Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
 
+
 # Temporary files
 *.swp
 *.swo
