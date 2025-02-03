@@ -1,5 +1,6 @@
 import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
+import { Analytics } from '@vercel/analytics/react'
 
 const config: DocsThemeConfig = {
   // SEO Head Configuration
@@ -64,7 +65,16 @@ const config: DocsThemeConfig = {
         }
       ]
     }
-  }
+  }, 
+
+  components: {
+    wrapper: ({ children }: { children: React.ReactNode }) => (
+      <>
+        {children}
+        <Analytics />
+      </>
+    ),
+  },
 }
 
 export default config
