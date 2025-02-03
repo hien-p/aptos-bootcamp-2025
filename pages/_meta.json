@@ -1,15 +1,9 @@
 {
-  "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
-  "contact": {
-    "title": "Contact ↗",
-    "type": "page",
-    "href": "https://twitter.com/shuding_",
-    "newWindow": true
-  }
+  "index": "Aptos Bootcamp 2025",
+  "web3_101": "Everython you should know about web3 ",
+  "Aptos_story": "Aptos story",
+  "Aptos_env": "Set up Aptos Environment",
+  "move_concepts": "Move Concepts🚀",
+  "Move_basic": "The basic of move",
+  "Intermediate_move": "Intermediate_move"
 }

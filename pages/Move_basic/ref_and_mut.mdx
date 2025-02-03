@@ -1,0 +1,126 @@
+# References và mutable references
+
+
+![](../assets/move_basic/ref_meme.png)
+
+
+Trong các bài học trước, chúng ta đã tìm hiểu về các trường hợp đơn giản khi đọc và ghi các trường đơn giản trong resources. Trong bài học này, chúng ta cần nói về references (tham chiếu).
+
+Trong Move, khi bạn truyền một giá trị đơn giản như u64 vào một hàm, bạn có thể đang tạo ra một bản sao của nó. Điều này được gọi là truyền tham trị (pass-by-value).
+
+```rust
+fun add_one(value: u64) {
+    // This doesn't change the original value!
+    value = value + 1;
+}
+
+fun call_add_one() {
+    let value = 10;
+    // This is wrong as it makes a copy of value!
+    add_one(value);
+
+    // This will error out as the value is still 10!
+    assert!(value == 11, 0);
+}
+```
+
+Vậy làm thế nào để chỉnh sửa giá trị gốc? Chúng ta cần truyền một tham chiếu có thể thay đổi (&mut) thay vì truyền giá trị trực tiếp. 
+
+Cách này gọi là truyền tham chiếu (pass-by-reference). Nó tương tự như cách truyền con trỏ (pointer) trong C/C++ hoặc Rust.
+
+```rust
+
+fun add_one(value: &mut u64) {
+    // * is needed to "deference" and modify the underlying value.
+    *value = *value + 1;
+}
+fun call_add_one() {
+    let value = 10;
+    add_one(&mut value);
+    // This now passes as the underlying value is modified!
+    assert!(value == 11, 0);
+}
+```
+
+Trong Move có hai loại tham chiếu: tham chiếu không thể thay đổi (&) và tham chiếu có thể thay đổi (&mut). 
+
+Tham chiếu không thể thay đổi (&) thường được dùng để truyền một giá trị như vector vào hàm chỉ với mục đích đọc dữ liệu thay vì ghi. 
+
+## Reference Operators:
+
+Trong Move, khi bạn thấy `e: T`, nó có nghĩa là "biểu thức e có kiểu dữ liệu T".
+
+Các toán tử `&e.f` và `&mut e.f` được dùng để tạo tham chiếu trong một struct hoặc mở rộng một tham chiếu đã có:
+
+```rust
+let s = S { f: 10 };
+let f_ref1: &u64 = &s.f;   // Works (Immutable reference)
+let s_ref: &S = &s;
+let f_ref2: &u64 = &s_ref.f // Also works (Immutable reference)
+```
+
+Nếu bạn có một struct với nhiều fields, bạn có thể tạo reference đến một field miễn là cả hai structs nằm trong cùng một module:
+
+```rust
+struct A { b: B }
+struct B { c : u64 }
+fun f(a: &A): &u64 {
+  &a.b.c
+}
+```
+
+Tuy nhiên, lưu ý là không thể tạo tham chiếu đến một tham chiếu khác (reference-to-reference):
+```rust
+let x = 7;
+let y: &u64 = &x;
+let z: &&u64 = &y; // Will not compile
+```
+
+Không thể có reference trỏ tới một reference khác. Mỗi reference phải trỏ trực tiếp tới data gốc.
+
+
+## Reference conflicts 
+
+References trong Move là một khái niệm mạnh mẽ đảm bảo tính an toàn và tránh reentrancy. Điều này khả thi vì Move tương tự như Rust và không cho phép tồn tại nhiều references cùng một lúc nếu một trong số chúng là mutable reference. 
+
+Bạn cũng không thể có nhiều mutable references. Điều này đảm bảo rằng chỉ có một phần của code có thể cập nhật một struct tại một thời điểm.
+
+
+Bạn có thể xem ví dụ sau: 
+
+```rust 
+let read_ref = borrow_global<SomeStruct>(@0xcafe);
+let mut write_ref = borrow_global_mut<SomeStruct>(@0xcafe);
+write_ref.some_field = 1;
+aptos_std::debug::print(&read_ref.some_field);
+```
+
+Đoạn code trên sẽ không biên dịch được vì read_ref và write_ref đều là references trỏ đến cùng một struct và được sử dụng trong cùng một scope. Điều này có thể dẫn đến read_ref nhận giá trị cũ khi in ra. 
+
+Để fix lỗi này, ta cần tách các references không chồng chéo nhau:
+
+```rust 
+// This works as the read_ref is no longer used after the print, which means it "goes out of scope".
+let read_ref = borrow_global<SomeStruct>(@0xcafe);
+aptos_std::debug::print(&read_ref.some_field);
+
+let mut write_ref = borrow_global_mut<SomeStruct>(@0xcafe);
+write_ref.some_field = 1;
+```
+
+Giải pháp chung cho vấn đề references conflict này là di chuyển các references vào các scope khác nhau. Code dưới đây sẽ hoạt động được:
+
+
+```rust 
+// This works because some_field is a perfect copy of the value in the struct and not a reference.
+// After this line is executed, read_ref is no longer used and goes out of scope.
+let some_field = borrow_global<SomeStruct>(@0xcafe).some_field;
+let mut write_ref = borrow_global_mut<SomeStruct>(@0xcafe);
+
+write_ref.some_field = 1;
+
+debug::print(&read_ref.some_field);
+
+```
+
+Bạn có thể đọc thêm ở đây: https://aptos.dev/en/build/smart-contracts/book/references

@@ -1,0 +1,46 @@
+
+# Signer 
+
+Chúng ta đã thấy cách hàm init_module được sử dụng để khởi tạo các tài nguyên toàn cục của module. Hàm này luôn có một tham số signer duy nhất, đại diện cho chữ ký của tài khoản sở hữu module.
+
+Các hàm thông thường cũng có thể có tham số signer. Tham số này được dùng để xác định người dùng đang gọi hàm và là một token xác thực rõ ràng từ người dùng đó. Khi hàm là một entry function (sẽ được đề cập trong bài học tiếp theo), chữ ký của người dùng sẽ được blockchain xác minh khi gửi transaction và hàm chỉ được thực thi nếu chữ ký hợp lệ.
+
+```rust
+use std::signer;
+use std::string::String;
+public fun do_something(user: &signer, activity: String) {
+    let user_address = signer::address_of(user);
+    do_something_with_user(user_address, activity);
+}
+fun do_something_with_user(user_address: address, activity: String) {
+    // do something with user
+}
+```
+
+Trong Move, signer giống như một chìa khóa để xác thực các giao dịch hoặc thao tác trên blockchain. Sau đây là phân tích chi tiết:
+
+- **Biểu diễn:** Signer là một kiểu dữ liệu cho biết ai có quyền kiểm soát một tài nguyên. Nó được định nghĩa với trường address:
+
+- **Các Thao Tác Với Signer:**
+    - `signer::address_of(&signer)`: Lấy địa chỉ từ signer.
+    - `signer::borrow_address(&signer)`: Lấy tham chiếu đến địa chỉ.
+
+- **Người Ký Giao Dịch:** Các signer của một giao dịch được xác định khi giao dịch được gửi lên blockchain Move.
+
+Ví dụ: 
+
+```rust
+fun example(s: signer) {
+        let signer_address = signer::address_of(&s);
+        
+        assert!(signer_address == @0x42, 0);
+        let _caller_address = signer_address;
+ }
+```
+
+Trong ví dụ này:
+
+- Hàm `example` nhận một tham số signer là `s`
+- Nó trích xuất địa chỉ thực từ signer bằng cách sử dụng `signer::address_of`
+- Địa chỉ được kiểm tra với một giá trị mong đợi để đảm bảo xác thực
+- Sau đó địa chỉ được lưu vào biến `_caller_address`

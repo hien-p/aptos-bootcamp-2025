@@ -1,0 +1,94 @@
+# Biến cục bộ trong Move là gì ?
+
+Biến cục bộ trong Move được xác định phạm vi tĩnh (lexical scoping). Biến mới được khai báo bằng từ khóa let, biến này sẽ ghi đè lên bất kỳ biến cục bộ nào trước đó có cùng tên. Biến cục bộ có thể thay đổi giá trị và có thể được cập nhật trực tiếp hoặc thông qua tham chiếu có thể thay đổi.
+
+## Syntax:
+```rust
+let <VARIABLE>:TYPE;  //explicit type annotation
+let <VARIABLE>=<EXPRESSION>;  //implicit type annotation
+```
+
+Ví dụ: 
+```rust
+module my_addrx::Variable
+{
+    fun local_variables()
+    {
+        let b:u8;
+        let c=false;
+        let d=b"hello world";
+        let e:u64=10000;
+        let f:address = @my_addrx;
+    }
+}
+```
+
+
+## Biến phải được khởi tạo trước khi sử dụng
+System của Move  sẽ ngăn chặn việc sử dụng biến local trước khi nó được gán giá trị: 
+```rust 
+let a;
+let b=a+10; //ERROR
+```
+
+## Valid variable name 
+
+Tên biến có thể chứa dấu gạch dưới _, chữ thường từ a đến z, chữ hoa từ A đến Z, và số từ 0 đến 9. Tên biến bắt buộc phải bắt đầu bằng dấu gạch dưới _ hoặc chữ thường từ a đến z. Tên biến không được bắt đầu bằng chữ in hoa.
+
+```rust
+// all valid
+let x = 1;
+let _x = 1;
+let _A = 1;
+let x0 = 1;
+let xA = 1;
+let foobar_123 = 1;
+
+// all invalid
+let X = 1; // ERROR!
+let Foo = 1; // ERROR!
+```
+
+
+## Khai báo nhiều biến cùng lúc với tuple
+
+Từ khóa let cho phép khai báo nhiều biến cùng lúc bằng cách sử dụng tuple. Các biến được khai báo trong dấu ngoặc đơn sẽ được khởi tạo với giá trị tương ứng từ tuple.
+
+```rust
+// valid 
+let (x,y,z) = (1,@0x1,false);
+
+// not 
+let (p,q) = (1,2,3,4);
+```
+
+## Dấu gạch dưới cho biến không sử dụng
+
+Trong Move, mọi biến đều phải được sử dụng (nếu không code sẽ không biên dịch được), do đó bạn không thể khởi tạo một biến mà không dùng đến. Tuy nhiên, có một cách để đánh dấu biến là cố ý không sử dụng - bằng cách dùng dấu gạch dưới _.
+
+```rust
+module my_addrx::Variable
+{
+    fun local_variables()
+    {
+        let a=1;   //compiling this module will result in error as "a" is not being used.
+    }
+}
+
+
+module my_addrx::Variable
+{
+    fun local_variables()
+    {
+        let _=1; //compiling this module will not result in error
+        
+        let b=10;
+        _=b;    //This is called shadowing
+    }
+}
+```
+
+Các bạn có thể đọc thêm ở đây: https://aptos.dev/en/build/smart-contracts/book/variables
+
+
+

@@ -1,0 +1,16 @@
+# Generics là gì ? 
+
+Ngôn ngữ Move có một tính năng gọi là generics. Nó giúp dev viết code một lần và có thể dùng cho nhiều loại dữ liệu khác nhau.
+
+Generics trong Move hoạt động giống như trong Java và C#. Nó cho phép viết code mà có thể tái sử dụng được cho bất kỳ kiểu dữ liệu nào phù hợp. Nhờ vậy, code sẽ ngắn gọn hơn, dễ đọc hơn và dễ sửa hơn.
+
+
+## Khai Báo Tham Số Kiểu
+Trong Move, kiểu generic giúp code linh hoạt hơn bằng cách cho phép định nghĩa các hàm và struct có thể làm việc với nhiều kiểu dữ liệu cụ thể khác nhau. Chi tiết như sau:
+
+```rust
+struct Box<T> {
+    value: T
+}
+```
+

@@ -1,0 +1,64 @@
+# Hằng số trong Aptos Move 
+
+Constants là cách để đặt tên cho các giá trị tĩnh được chia sẻ bên trong một `module` hoặc `script`. Trong Move, constants được khai báo bằng từ khóa `const`.
+
+Giá trị của constant phải được xác định tại thời điểm biên dịch. Giá trị này sẽ được lưu trữ trong module hoặc script đã được biên dịch. Mỗi lần constant được sử dụng, một bản sao mới của giá trị đó sẽ được tạo ra.
+
+## Syntax
+
+```
+const <NAME>: <TYPE> = <EXPRESSION>;
+```
+
+
+Code example: 
+```rust
+module my_addrx::Constants
+{
+    use std::debug::print;
+
+    //Some Examples
+    const X:u64=10;
+    const Y:address=@my_addrx;
+    const Z:bool=false;
+
+    fun constants()
+    {
+        print(&X);
+        print(&Y);
+        print(&Z);
+        
+    }
+
+    #[test]
+    fun testing()
+    {
+        constants();
+    }
+}
+
+
+```
+
+## Đặt tên cho hằng số 
+
+Tên hằng số (constant) phải bắt đầu bằng chữ cái in hoa từ `A` đến `Z`. Sau ký tự đầu tiên, có thể dùng dấu gạch dưới `_`, chữ cái thường `a` đến `z`, chữ in hoa `A` đến `Z`, hoặc số từ `0` đến `9`.
+
+```rust
+//Valid
+const Foo:u64=123;
+const Flag:bool=true; 
+const My_Addrx:address=@my_addrx;
+
+//Invalid;
+const x:u8=10;
+const flag:bool=false;
+const my_addrx:address=@my_addrx;
+```
+
+**Một số điểm quan trọng khác:**
+
+- Constants chỉ giới hạn ở các kiểu dữ liệu nguyên thủy như `bool`, `u8`, `u16`, `u32`, `u64`, `u128`, `u256`, `address`, và `vector&lt;u8&gt;`.
+- Tên constants nên viết theo kiểu upper camel case và bắt đầu bằng `E` nếu đại diện cho mã lỗi (ví dụ: `EIndexOutOfBounds`) và upper snake case nếu đại diện cho giá trị không phải lỗi (ví dụ: `MIN_STAKE`).
+- Hiện tại chưa hỗ trợ constants `public`. Giá trị `const` chỉ có thể được sử dụng trong module khai báo nó.
+- Giá trị constant không thể truy cập được từ bên ngoài phạm vi module hoặc script của nó.

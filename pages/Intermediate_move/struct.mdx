@@ -1,0 +1,47 @@
+Move system tỏa sáng khi định nghĩa các custom type. Các kiểu dữ liệu do người dùng định nghĩa có thể được điều chỉnh phù hợp với nhu cầu cụ thể của ứng dụng. Không chỉ ở cấp độ dữ liệu, mà còn ở hành vi của nó. Trong phần này, chúng ta sẽ tìm hiểu về cách định nghĩa và sử dụng struct.
+
+# Struct 
+
+![](../assets/Intermediate_move/struct_meme.png)
+
+## Struct là gì?
+
+Trong Move, struct là một kiểu dữ liệu tùy chỉnh. Bạn có thể hình dung nó như một container để lưu trữ thông tin với các trường (field) và giá trị tương ứng. Trường chính là thuộc tính (property), và giá trị là dữ liệu được lưu trữ trong đó.
+
+
+Syntax:
+
+```rust
+struct NAME has Abilities
+{
+    FIELD1 : TYPE1,
+    FIELD2 : TYPE2,
+    ...
+}
+```     
+Nói cách khác, đây là kiểu dữ liệu tùy chỉnh để lưu thông tin xuyên suốt quá trình thực thi contract. Struct có thể chứa các thuộc tính với kiểu dữ liệu(số nguyên không dấu, chuỗi,...) hoặc các struct và kiểu dữ liệu tùy chỉnh khác.
+
+Đây là ví dụ: 
+```rust 
+module publisher::my_super_easy_module {
+    use std::signer;
+    use std::string::{Self, String};
+    use std::debug;
+
+    struct Person {
+       name: String,
+       age: u64
+    }
+}
+```
+
+Struct mặc định không có bất kỳ abilities nào (như struct Person ở trên), hay còn gọi là "naked struct", chỉ có thể được truy cập trong phạm vi module khai báo nó - trong trường hợp này là module my_super_easy_module. Các trường name và age trong struct Person chỉ có thể được truy cập từ bên trong module đó.
+
+Một instance của "naked struct" (struct trần) không thể sao chép (copy), không thể xóa bỏ (drop), và không thể lưu trữ trong bộ nhớ toàn cục (global storage).
+
+```rust
+public entry fun pass_through(person: Person): Person {
+    let new_person = person;
+    return new_person
+}
+```

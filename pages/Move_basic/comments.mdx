@@ -1,0 +1,92 @@
+
+
+# Comment trong Move 
+
+![](../assets/move_basic/comment_meme.png)
+
+Comments (chú thích) là những ghi chú trong code. Chúng không ảnh hưởng đến chương trình vì compiler bỏ qua chúng khi tạo bytecode Move.
+
+Comments giúp bạn giải thích code một cách dễ hiểu, ghi chú cho bản thân và các lập trình viên khác, tạm thời tắt một đoạn code, hoặc tạo tài liệu hướng dẫn. Move có 3 kiểu comments đơn giản: chú thích một dòng, chú thích nhiều dòng, và chú thích tài liệu.
+
+Có 3 loại comments:
+* Line 
+* Block 
+* Doc 
+
+## Line comments 
+
+Bạn có thể dùng dấu gạch chéo kép // để comment một dòng. Mọi nội dung sau // sẽ được compiler bỏ qua khi biên dịch.
+
+Đây là syntax comment: 
+
+```rust
+module book::comments_line {
+    fun some_function() {
+        // this is a comment line
+    }
+}
+```
+
+Ví dụ: 
+
+```rust 
+module book::comments_line_2 {
+    // let's add a note to everything!
+    fun some_function_with_numbers() {
+        let a = 10;
+        // let b = 10 this line is commented and won't be executed
+        let b = 5; // here comment is placed after code
+        a + b; // result is 15, not 10!
+    }
+}
+```
+
+## Block comment
+
+Block comments (chú thích khối) được dùng để comment một khối code. Chú thích khối bắt đầu bằng **`/*`** và kết thúc bằng **`*/`**. 
+
+Mọi nội dung nằm giữa **`/*`** và **`*/`** sẽ bị compiler bỏ qua khi biên dịch. Bạn có thể dùng chú thích khối để comment một dòng hoặc nhiều dòng. Thậm chí bạn có thể dùng nó để comment một phần của một dòng.
+```rust 
+module book::comments_block {
+    fun /* you can comment everywhere */ go_wild() {
+        /* here
+           there
+           everywhere */ let a = 10;
+        let b = /* even here */ 10; /* and again */
+        a + b;
+    }
+    /* you can use it to remove certain expressions or definitions
+    fun empty_commented_out() {
+
+    }
+    */
+}
+```
+
+
+## Doc comment
+
+Documentation comments (chú thích tài liệu) là loại comments đặc biệt dùng để tạo tài liệu cho code của bạn.
+
+Chúng tương tự như block comments, nhưng bắt đầu bằng ba dấu gạch chéo **`///`** và được đặt trước định nghĩa của phần tử cần tạo tài liệu.
+
+```rust
+/// Module has documentation!
+module book::comments_doc {
+
+    /// This is a 0x0 address constant!
+    const AN_ADDRESS: address = @0x0;
+
+    /// This is a struct!
+    public struct AStruct {
+        /// This is a field of a struct!
+        a_field: u8,
+    }
+
+    /// This function does something!
+    /// And it's documented!
+    fun do_something() {}
+}
+```
+
+Bạn có thể đọc chi tiết ở đây: https://aptos.dev/en/build/smart-contracts/book/coding-conventions

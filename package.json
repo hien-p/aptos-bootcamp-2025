@@ -1,7 +1,7 @@
 {
-  "name": "nextra-docs-template",
+  "name": "aptos-bootcamp-2025",
   "version": "0.0.1",
-  "description": "Nextra docs template",
+  "description": "Aptos Bootcamp 2025 - VBI",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

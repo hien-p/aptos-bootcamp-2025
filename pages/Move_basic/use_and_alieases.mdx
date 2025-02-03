@@ -1,0 +1,87 @@
+# Use và Aliases 
+
+Cú pháp use được dùng để tạo các alias (tên gọi khác) cho các thành phần trong các module khác. use có thể được sử dụng để tạo alias có phạm vi hoặc là trong toàn bộ module, hoặc chỉ trong một khối expression cụ thể.
+
+
+## syntax 
+
+```rust
+use <address>::<module name>;
+use <address>::<module name> as <module alias name>;
+use <address>::<module name>::<module member>;
+use <address>::<module name>::<module member> as <member alias>;
+use <address>::<module name>::{<module member>, <module member> as <member alias> ... };
+```
+
+Ví dụ: 
+
+```rust 
+use std::vector;
+use std::debug as d;
+use std::debug::print as p;
+
+```
+
+## Self 
+
+Nếu bạn cần thêm alias cho chính Module đó cùng với các thành phần bên trong module, bạn có thể làm điều này trong một câu lệnh use duy nhất bằng cách sử dụng Self. Self là một keyword đặc biệt để tham chiếu đến chính module đó.
+
+```rust
+use std::simple_map::{Self, SimpleMap};
+```
+
+
+## Inside a module:
+
+Bên trong một module, tất cả các khai báo use đều có thể được sử dụng mà không phụ thuộc vào thứ tự khai báo.
+
+```rust
+module  my_addrx::example {
+    use std::vector;
+
+    fun example(): vector<u8> {
+        let v = empty();
+        vector::push_back(&mut v, 0);
+        vector::push_back(&mut v, 10);
+        v
+    }
+
+    use std::vector::empty;
+}
+
+```
+
+## Inside an expression:
+
+Bạn có thể thêm khai báousevào đầu bất kỳ khối expression nào: 
+
+```rust 
+module  my_addrx::example {
+
+    fun example(): vector<u8> {
+        use std::vector::{empty, push_back};
+
+        let v = empty();
+        push_back(&mut v, 0);
+        push_back(&mut v, 10);
+        v
+    }
+}
+```
+Tương tự như let, các alias được tạo bởi use trong một khối expression sẽ bị xóa khi kết thúc block đó.
+
+```rust 
+module  my_addrx::example {
+
+    fun example(): vector<u8> {
+        let result = {
+            use std::vector::{empty, push_back};
+            let v = empty();
+            push_back(&mut v, 0);
+            push_back(&mut v, 10);
+            v
+        };
+        result
+    }
+}
+```

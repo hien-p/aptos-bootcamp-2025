@@ -1,0 +1,27 @@
+## Package là gì? 
+
+Package cho phép lập trình viên Move tái sử dụng và chia sẻ code dễ dàng giữa các project. 
+
+Các module Move có thể được gom nhóm thành một package - một tập hợp các module được publish cùng lúc trên một tài khoản.
+
+Một thư mục package Move source chứa file manifest Move.toml cùng với các thư mục con sau:
+
+```rust
+- a_move_package
+    - Move.toml
+    - sources (required)
+        - module.move
+        - .move
+    - examples (tùy chọn, dùng cho test & dev mode)
+    - scripts (tùy chọn, có thể đặt trong sources)
+    - doc_templates (tùy chọn)
+    - tests (tùy chọn, dùng cho test mode)
+```
+
+Một package Move cần có các thư mục được đánh dấu `required` để có thể biên dịch được. Ngoài ra, bạn có thể thêm các thư mục tùy chọn khác vào package. Khi build ở mode `test` hoặc `dev`, các thư mục `tests` và `examples` sẽ được thêm vào quá trình biên dịch.
+
+Thư mục `sources` là nơi chứa code move của bạn, bao gồm cả module và script Move. Thư mục `examples` dùng để chứa code mẫu và code test - những phần này chỉ được dùng khi phát triển và sẽ không có trong bản chính thức.
+
+Nếu muốn tách riêng các script Move, bạn có thể đặt chúng vào thư mục `scripts`. Thư mục này luôn được đưa vào khi biên dịch nếu nó tồn tại. Cuối cùng, thư mục `doc_templates` chứa các mẫu để tạo tài liệu hướng dẫn.
+
+Bạn có thể đọc thêm ở đây: https://aptos.dev/en/build/smart-contracts/book/packages
